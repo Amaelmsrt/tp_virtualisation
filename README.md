@@ -55,3 +55,9 @@ On crée le service :
 ```bash
 docker network create --driver overlay web-clusterswarm
 ```
+
+Et on déploie le service à nouveau.
+
+Voici le curl pour vérifier que le service est bien en place :
+
+![Curl du service clusterswarm](./img/curl_clusterswarm.png)
