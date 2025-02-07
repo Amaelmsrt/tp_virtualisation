@@ -87,14 +87,18 @@ services:
         depends_on:
             - traefik
 
-    apache:
-        image: php:7.4-apache
-        container_name: apache
+    apache_web:
+        build:
+        context: ./services/apache
+        image: apache_web_image:latest
         volumes:
-            - ./apache/index.php:/var/www/html/apache/index.php
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.apache.rule=PathPrefix(`/apache`)"
-            - "traefik.http.services.apache.loadbalancer.server.port=80"
+        - ./services/apache/index.php:/var/www/html/index.php
         networks:
-            - web-utilisateurs
+        - traefik-public
+        - app-apache
+        labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.http.routers.apache.rule=PathPrefix(`/apache`)"
+        - "traefik.http.routers.apache.entrypoints=web"
+        - "traefik.http.routers.apache.middlewares=auth"

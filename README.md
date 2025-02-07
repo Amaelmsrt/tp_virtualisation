@@ -89,3 +89,12 @@ On commence par déployer l'image :
 ```bash
 docker build -t apache_web_image:latest ./services/apache/
 ```
+
+On crée le service :
+
+```bash
+docker network create --driver overlay web-apache
+```
+
+Et on déploie le service à nouveau.
+
