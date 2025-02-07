@@ -61,3 +61,11 @@ Et on déploie le service à nouveau.
 Voici le curl pour vérifier que le service est bien en place :
 
 ![Curl du service clusterswarm](./img/curl_clusterswarm.png)
+
+### Application **Fortune Image**
+
+On commence par déployer l'image :
+
+```bash
+docker build -t fortune_web_image:latest ./services/fortune/
+```
