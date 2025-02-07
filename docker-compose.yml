@@ -1,4 +1,12 @@
 version: '3'
+
+networks:
+    web-utilisateurs:
+        external: true
+
+volumes:
+    mysql_data:
+
 services:
     traefik:
         image: traefik
@@ -20,7 +28,8 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock"
         networks:
-            - mon_reseau
+            - web-utilisateurs
+
     db:
         image: mysql:latest
         container_name: mysql-db
@@ -28,50 +37,44 @@ services:
             MYSQL_ROOT_PASSWORD: motdepasse
             MYSQL_DATABASE: ma_base_de_donnees
         networks:
-            - mon_reseau
+            - web-utilisateurs
         volumes:
-            - toto:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
+
     redis:
         image: redis:latest
         container_name: redis
         networks:
-            - mon_reseau
+            - web-utilisateurs
         ports:
             - "6379:6379"
+
     web:
-        image: php:7.4-apache
+        build:
+            context: ./php
+            dockerfile: Dockerfile
         container_name: mon-serveur-web
         volumes:
-          - ./php/index.php:/var/www/html/index.php
+            - ./php/index.php:/var/www/html/index.php
         labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.mon-serveur-web.rule=Host(`utilisateurs.localhost`)"
-          - "traefik.http.services.mon-serveur-web.loadbalancer.server.port=80"
-        
+            - "traefik.enable=true"
+            - "traefik.http.routers.mon-serveur-web.rule=Host(`utilisateurs.localhost`)"
+            - "traefik.http.services.mon-serveur-web.loadbalancer.server.port=80"
         networks:
-          - mon_reseau
+            - web-utilisateurs
         depends_on:
-          - db
-          - redis
-          - traefik
+            - db
+            - redis
+            - traefik
 
-    app-fortune :
+    app-fortune:
         build:
             context: ./app_fortune_image
             dockerfile: Dockerfile
-
         container_name: app-fortune
-
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.app-fortune.rule=Host(`fortune.localhost`)"
             - "traefik.http.services.app-fortune.loadbalancer.server.port=80"
-
         networks:
-            - mon_reseau
-networks:
-    mon_reseau:
-        driver: bridge
-volumes:
-    toto:
-        external: true
+            - web-utilisateurs
