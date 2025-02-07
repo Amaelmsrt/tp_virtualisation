@@ -63,7 +63,7 @@ services:
     clusterswarm:
         image: clusterswarm_web_image:latest
         deploy:
-            replicas: 1
+            replicas: 5
         networks:
             - web-utilisateurs
         labels:
