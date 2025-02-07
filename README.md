@@ -31,3 +31,21 @@ Et on crée le service :
 ```bash
 docker network create --driver overlay web-utilisateurs
 ```
+
+Après cela, on peut déployer le service :
+
+```bash
+docker stack deploy -c docker-compose.yml traefik
+```
+
+Nous en faisons alors un curl ensuite pour vérifier que le service est bien en place :
+
+![Curl du service utilisateurs](./img/curl_utilisateurs.png)
+
+### Site web de **Cluster avec Swarm**
+
+On commence par déployer l'image :
+
+```bash
+docker build -t cluster_web_image:latest ./services/cluster/
+```
