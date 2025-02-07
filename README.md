@@ -69,3 +69,23 @@ On commence par déployer l'image :
 ```bash
 docker build -t fortune_web_image:latest ./services/fortune/
 ```
+
+On crée le service :
+
+```bash
+docker network create --driver overlay web-fortuneapp
+```
+
+Et on déploie le service à nouveau.
+
+Voici le curl pour vérifier que le service est bien en place :
+
+![Curl du service fortuneapp](./img/curl_fortuneapp.png)
+
+### Recherche perso
+
+On commence par déployer l'image :
+
+```bash
+docker build -t apache_web_image:latest ./services/apache/
+```

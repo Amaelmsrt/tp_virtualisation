@@ -86,3 +86,15 @@ services:
             - web-utilisateurs
         depends_on:
             - traefik
+
+    apache:
+        image: php:7.4-apache
+        container_name: apache
+        volumes:
+            - ./apache/index.php:/var/www/html/apache/index.php
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.apache.rule=PathPrefix(`/apache`)"
+            - "traefik.http.services.apache.loadbalancer.server.port=80"
+        networks:
+            - web-utilisateurs
