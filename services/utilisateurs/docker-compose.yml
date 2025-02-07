@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  web:
+    image: mon_image_php:latest
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
+    networks:
+      - my_network
+    depends_on:
+      - db
+      - redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.utilisateurs.rule=Host(`utilisateurs.localhost`)"
+      - "traefik.http.services.utilisateurs.loadbalancer.server.port=80"
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - my_network
+
+  redis:
+    image: redis:alpine
+    networks:
+      - my_network
+
+volumes:
+  db_data:
+
+networks:
+  my_network:
+    external: true
