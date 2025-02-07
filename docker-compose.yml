@@ -10,6 +10,7 @@ volumes:
 services:
     traefik:
         image: traefik:v2.10
+        container_name: traefik
         command:
             - "--api.dashboard=true"
             - "--providers.docker=true"
@@ -28,6 +29,7 @@ services:
 
     db:
         image: mysql:latest
+        container_name: mysql-db
         environment:
             MYSQL_ROOT_PASSWORD: motdepasse
             MYSQL_DATABASE: ma_base_de_donnees
@@ -38,20 +40,19 @@ services:
 
     redis:
         image: redis:latest
+        container_name: redis
         networks:
             - web-utilisateurs
 
-    # Service utilisateurs
     utilisateurs:
         image: utilisateurs_web_image:latest
-        deploy:
-            replicas: 1
+        container_name: mon-serveur-web
         volumes:
             - ./php/index.php:/var/www/html/index.php
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.utilisateurs.rule=Host(`utilisateurs.localhost`)"
-            - "traefik.http.services.utilisateurs.loadbalancer.server.port=80"
+            - "traefik.http.routers.mon-serveur-web.rule=Host(`utilisateurs.localhost`)"
+            - "traefik.http.services.mon-serveur-web.loadbalancer.server.port=80"
         networks:
             - web-utilisateurs
         depends_on:
@@ -59,7 +60,6 @@ services:
             - redis
             - traefik
 
-    # Service clusterswarm
     clusterswarm:
         image: clusterswarm_web_image:latest
         deploy:

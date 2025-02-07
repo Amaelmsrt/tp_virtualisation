@@ -50,3 +50,8 @@ On commence par déployer l'image :
 docker build -t clusterswarm_web_image:latest ./services/clusterswarm/
 ```
 
+On crée le service :
+
+```bash
+docker network create --driver overlay web-clusterswarm
+```
