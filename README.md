@@ -82,6 +82,14 @@ Voici le curl pour vérifier que le service est bien en place :
 
 ![Curl du service fortuneapp](./img/curl_fortuneapp.png)
 
+### Site web flask
+
+On commence par déployer l'image :
+
+```bash
+docker build -t flask_web_image:latest ./services/flask/
+```
+
 ### Recherche perso
 
 On commence par déployer l'image :
@@ -98,3 +106,6 @@ docker network create --driver overlay web-apache
 
 Et on déploie le service à nouveau.
 
+Voici le curl pour vérifier que le service est bien en place :
+
+![Curl du service apache](./img/curl_apache.png)
