@@ -80,15 +80,7 @@ Et on déploie le service à nouveau.
 
 Voici le curl pour vérifier que le service est bien en place :
 
-![Curl du service fortuneapp](./img/curl_fortuneapp.png)
-
-### Site web flask
-
-On commence par déployer l'image :
-
-```bash
-docker build -t flask_web_image:latest ./services/flask/
-```
+![Curl du service fortuneapp](./img/curl_fortune.png)
 
 ### Recherche perso
 
