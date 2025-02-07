@@ -47,5 +47,6 @@ Nous en faisons alors un curl ensuite pour vérifier que le service est bien en 
 On commence par déployer l'image :
 
 ```bash
-docker build -t cluster_web_image:latest ./services/cluster/
+docker build -t clusterswarm_web_image:latest ./services/clusterswarm/
 ```
+
