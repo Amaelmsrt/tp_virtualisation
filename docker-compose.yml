@@ -1,0 +1,77 @@
+version: '3'
+services:
+    traefik:
+        image: traefik
+        container_name: traefik
+        command:
+            - "--api.dashboard=true"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--entrypoints.web.address=:80"
+
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
+            - "traefik.http.routers.api.service=api@internal"
+
+        ports:
+            - "80:80"
+            - "8080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        networks:
+            - mon_reseau
+    db:
+        image: mysql:latest
+        container_name: mysql-db
+        environment:
+            MYSQL_ROOT_PASSWORD: motdepasse
+            MYSQL_DATABASE: ma_base_de_donnees
+        networks:
+            - mon_reseau
+        volumes:
+            - toto:/var/lib/mysql
+    redis:
+        image: redis:latest
+        container_name: redis
+        networks:
+            - mon_reseau
+        ports:
+            - "6379:6379"
+    web:
+        image: php:7.4-apache
+        container_name: mon-serveur-web
+        volumes:
+          - ./php/index.php:/var/www/html/index.php
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.mon-serveur-web.rule=Host(`utilisateurs.localhost`)"
+          - "traefik.http.services.mon-serveur-web.loadbalancer.server.port=80"
+        
+        networks:
+          - mon_reseau
+        depends_on:
+          - db
+          - redis
+          - traefik
+
+    app-fortune :
+        build:
+            context: ./app_fortune_image
+            dockerfile: Dockerfile
+
+        container_name: app-fortune
+
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.app-fortune.rule=Host(`fortune.localhost`)"
+            - "traefik.http.services.app-fortune.loadbalancer.server.port=80"
+
+        networks:
+            - mon_reseau
+networks:
+    mon_reseau:
+        driver: bridge
+volumes:
+    toto:
+        external: true
