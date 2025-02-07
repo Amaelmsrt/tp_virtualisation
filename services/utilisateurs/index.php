@@ -1,8 +1,8 @@
 <?php
-        $servername = "mysql-db";
+        $servername = "utilisateurs_db";
         $username = "root";
-        $password = "motdepasse";
-        $dbname = "ma_base_de_donnees";
+        $password = "root";
+        $dbname = "default_db";
         $cached= "dans bd";
 
         // Connexion à MySQL
@@ -13,27 +13,26 @@
 
         // Connexion à Redis
         $redis = new Redis();
-        $redis->connect('redis', 6379);
+        $redis->connect('utilisateurs_redis', 6379);
 
         // Vérifier si les données sont en cache
         $cachedData = $redis->get("utilisateurs");
         if ($cachedData) {
-                $utilisateurs = json_decode($cachedData, true);
-                        $cached= "dans cache";
-
+            $utilisateurs = json_decode($cachedData, true);
+            $cached= "dans cache";
         } else {
-                $sql = "SELECT * FROM utilisateurs";
-                $result = $conn->query($sql);
+            $sql = "SELECT * FROM utilisateurs";
+            $result = $conn->query($sql);
 
-                $utilisateurs = [];
-                if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                                $utilisateurs[] = $row;
-                        }
-                }
+            $utilisateurs = [];
+            if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                            $utilisateurs[] = $row;
+                    }
+            }
 
-                // Mettre en cache les résultats pendant 60 secondes
-                $redis->set("utilisateurs", json_encode($utilisateurs), 60);
+            // Mettre en cache les résultats pendant 60 secondes
+            $redis->set("utilisateurs", json_encode($utilisateurs), 60);
         }
 
         // Afficher les utilisateurs
@@ -44,4 +43,4 @@
         echo "</ul>";
 
         $conn->close();
-?>
+        ?>
