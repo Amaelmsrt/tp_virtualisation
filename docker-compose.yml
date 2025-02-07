@@ -89,16 +89,16 @@ services:
 
     apache_web:
         build:
-        context: ./services/apache
+            context: ./services/apache
         image: apache_web_image:latest
         volumes:
-        - ./services/apache/index.php:/var/www/html/index.php
+            - ./services/apache/index.php:/var/www/html/index.php
         networks:
-        - traefik-public
-        - app-apache
+            - traefik-public
+            - app-apache
         labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=traefik-public"
-        - "traefik.http.routers.apache.rule=PathPrefix(`/apache`)"
-        - "traefik.http.routers.apache.entrypoints=web"
-        - "traefik.http.routers.apache.middlewares=auth"
+            - "traefik.enable=true"
+            - "traefik.docker.network=traefik-public"
+            - "traefik.http.routers.apache.rule=PathPrefix(`/apache`)"
+            - "traefik.http.routers.apache.entrypoints=web"
+            - "traefik.http.routers.apache.middlewares=auth"
