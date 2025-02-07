@@ -45,7 +45,7 @@ services:
             - web-utilisateurs
 
     web:
-        image: ton_docker_hub/utilisateurs_web_image:latest
+        image: utilisateurs_web_image:latest
         container_name: mon-serveur-web
         volumes:
             - ./php/index.php:/var/www/html/index.php
